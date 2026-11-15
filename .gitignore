@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+data/
+.env
+*.pdf
+.DS_Store
+COVERING_EMAIL.md

@@ -1,0 +1,10 @@
+# Render Blueprint: New > Blueprint > pick this repository. Free plan; sleeps when idle and wakes on the next visit.
+services:
+  - type: web
+    name: finn
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/status
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false  # Render asks for the value at setup; it is never stored in the repository
