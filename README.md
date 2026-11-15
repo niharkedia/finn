@@ -2,6 +2,8 @@
 
 FINN watches a portfolio's exchange filings and prices and pushes only what matters, sized against each company's own scale. On demand, it checks management's earnings-call promises against the numbers the company later reported.
 
+**Live:** https://finn-silk.vercel.app (best on a phone) · **Code:** https://github.com/niharkedia/finn
+
 **Point of view:** an investor doesn't need another feed or another chatbot. They need an inbox triaged by an analyst who is strict about scale and has a long memory. So FINN is built around three questions:
 - **Today:** what needs my attention?
 - **Alerts:** tell me when my thresholds are crossed.
@@ -15,7 +17,7 @@ echo "GROQ_API_KEY=..." > .env      # optional: free open-weight models; everyth
 .venv/bin/uvicorn finn.api:app      # open http://localhost:8000 on a phone-sized window
 ```
 
-On start, a background thread fetches the portfolio's latest filings. Off market hours, it also runs the end-of-day price scan. After that it polls every 15 minutes. With Docker, `docker build -t finn . && docker run -p 8000:8000 -e GROQ_API_KEY finn` runs it on any container host. To host it free on Render, push the repository to GitHub, create a Blueprint from it in Render (it reads `render.yaml`), and paste the Groq key when asked. A fresh host starts from `seed/finn.db`, a snapshot with recent filings and five built ledgers, so the app never opens empty after its host sleeps.
+On start, a background thread fetches the portfolio's latest filings. Off market hours, it also runs the end-of-day price scan. After that it polls every 15 minutes. With Docker, `docker build -t finn . && docker run -p 8000:8000 -e GROQ_API_KEY finn` runs it on any container host. The live copy runs on Vercel's free Hobby plan: `app.py` is Vercel's FastAPI entrypoint, `vercel.json` bundles the starter database, and Vercel runs the background checker whenever an instance is awake. To host it free on Render instead, push the repository to GitHub, create a Blueprint from it in Render (it reads `render.yaml`), and paste the Groq key when asked. A fresh host starts from `seed/finn.db`, a snapshot with recent filings and five built ledgers, so the app never opens empty after its host sleeps.
 
 The model steps are guidance extraction, the credibility analysis, labels for filings the rules can't place, and profiles of new executives. Any one of these settings turns them on:
 

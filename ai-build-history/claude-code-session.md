@@ -1,6 +1,6 @@
 # FINN: AI build history
 
-The complete Claude Code session in which FINN was planned and built, 13 Nov 23:33 to 15 Nov 19:52 IST, 2026 (Claude Opus 5.5, VS Code extension). 13 prompts and 332 tool calls.
+The complete Claude Code session in which FINN was planned and built, 13 Nov 23:33 to 15 Nov 20:10 IST, 2026 (Claude Opus 5.5, VS Code extension). 14 prompts and 367 tool calls.
 
 Every prompt, every reply and every tool call (shell commands, file writes and edits, web searches) is here in order. Tool output is trimmed to its first lines, and file writes show their opening lines; the finished code is in the repository. The agent's private reasoning and the context the editor injects automatically are left out. Personal details (email, employer, home folder) are redacted.
 
@@ -7660,5 +7660,737 @@ Output:
 ```
 292409631 -> Nihar[employer] | User
 143067709 -> niharkedia | User
+```
+</details>
+
+<details><summary><code>Bash</code> · Refresh history, stage files, verify exclusions, scan for secrets</summary>
+
+```bash
+[line removed: it listed a process environment]
+```
+
+Output:
+```
+13 prompts, 332 tool calls -> ai-build-history/claude-code-session.md
+--- staged:
+ .dockerignore                           |    6 +
+ .gitignore                              |    7 +
+ Dockerfile                              |   11 +
+ FINN_research_plan.md                   |  433 ++
+ README.md                               |  141 +-
+ ai-build-history/claude-code-session.md | 7664 +++++++++++++++++++++++++++++++
+ finn/__init__.py                        |    4 +
+ finn/api.py                             |   85 +
+ finn/config.py                          |   41 +
+ finn/llm.py                             |   98 +
+ finn/research.py                        |  339 ++
+ finn/service.py                         |  234 +
+…
+```
+</details>
+
+<details><summary><code>Bash</code> · Commit the project under the user's name</summary>
+
+```bash
+git commit -q -F - <<'EOF' && git log --format='%h %an <%ae>%n  %s' -2
+FINN: a filtering investor agent for Indian equities
+
+Mobile-first web app (FastAPI + plain JavaScript) for the ENAM AI Engineer build challenge.
+
+- Today: filings ranked by size against each company's SEBI materiality line, routine paperwork collapsed, results cards built from the filed numbers
+- Alerts: price and volume thresholds set in one sentence, moves shown against the Nifty, alerts for material filings
+- Research: fundamentals for any NSE ticker, and the Promise Ledger, which checks management's guidance against later reported numbers
+
+Runs on the open-weight gpt-oss-120b through Groq's free tier (or Claude), and deploys free on Render with render.yaml.
+EOF
+```
+
+Output:
+```
+f2effa8 Nihar Kedia <143067709+niharkedia@users.noreply.github.com>
+  FINN: a filtering investor agent for Indian equities
+39bd555 shadow_tes <143067709+niharkedia@users.noreply.github.com>
+  Initial commit
+```
+</details>
+
+
+**Claude:** Committed as **Nihar Kedia** on top of the existing commit, ready to push. The push itself needs access to `niharkedia`, so I'll ask:
+
+<details><summary><code>AskUserQuestion</code> · </summary>
+
+```json
+{
+ "questions": [
+  {
+   "question": "Your commit is ready, but this Mac's saved GitHub login is your work account (Nihar[employer]), so I won't push with it. To push as niharkedia, create a token and add it to .env:\n1. github.com (signed in as niharkedia) → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.\n2. Repository access: Only select repositories → finn. Permissions: Contents → Read and write.\n3. Add a line GITHUB_TOKEN=github_pat_... to ~/enam_holdings/.env. It's git-ignored, so it's never committed; don't paste it in chat.\n\nHow do you want to push?",
+   "header": "GitHub push",
+   "multiSelect": false,
+   "options": [
+    {
+     "label": "Token is in .env",
+     "description": "I push the commit to github.com/niharkedia/finn as niharkedia. The token is used for this one push and isn't saved to git or your keychain."
+    },
+    {
+…
+```
+
+Output:
+```
+The user answered: "Your commit is ready, but this Mac's saved GitHub login is your work account (Nihar[employer]), so I won't push with it. To push as niharkedia, create a token and add it to .env:
+1. github.com (signed in as niharkedia) → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.
+2. Repository access: Only select repositories → finn. Permissions: Contents → Read and write.
+3. Add a line GITHUB_TOKEN=github_pat_... to ~/enam_holdings/.env. It's git-ignored, so it's never committed; don't paste it in chat.
+
+How do you want to push?"="my github public account so it does not require token ". Read the answers carefully — they may request clarification, changes, or that you not proceed — and follow what they actually say.
+```
+</details>
+
+<details><summary><code>Bash</code> · Start a GitHub device sign-in for the personal account</summary>
+
+```bash
+gh auth login --hostname github.com --git-protocol https --web --skip-ssh-key < /dev/null > <scratchpad>/gh_login.log 2>&1; echo "exit $?" >> <scratchpad>/gh_login.log
+```
+
+Output:
+```
+Command running in background with ID: b23d7b16t. Output is being written to: <temp> You will be notified when it completes — do not poll that file or sleep while waiting. Read the file only if the user asks for progress, or if you need a line it prints before you can go on, such as a server's ready line or port.
+```
+</details>
+
+<details><summary><code>Bash</code> · Read the one-time code from the sign-in output</summary>
+
+```bash
+F=<scratchpad>/gh_login.log; for i in $(seq 1 20); do grep -q -E "one-time code|exit|error" $F 2>/dev/null && break; perl -e 'select(undef,undef,undef,0.5)'; done; cat $F | sed -E 's/(gho_)[A-Za-z0-9]+/\1[hidden]/g'
+```
+
+Output:
+```
+! First copy your one-time code: B555-BCD1
+Open this URL to continue in your web browser: https://github.com/login/device
+```
+</details>
+
+
+**Claude:** Your one-time code is **B555-BCD1**. Waiting for you to enter it:
+
+<details><summary><code>AskUserQuestion</code> · </summary>
+
+```json
+{
+ "questions": [
+  {
+   "question": "Open https://github.com/login/device and enter the code B555-BCD1. First make sure the browser is signed in as niharkedia, not your work account Nihar[employer]; if it isn't, switch accounts. Then click Authorize. The code expires in about 15 minutes. Done?",
+   "header": "GitHub code",
+   "multiSelect": false,
+   "options": [
+    {
+     "label": "Done, authorized",
+     "description": "I check the sign-in is niharkedia, push the commit, then switch the GitHub tool back to your work account so nothing else changes."
+    },
+    {
+…
+```
+
+Output:
+```
+The user answered: "Open https://github.com/login/device and enter the code B555-BCD1. First make sure the browser is signed in as niharkedia, not your work account Nihar[employer]; if it isn't, switch accounts. Then click Authorize. The code expires in about 15 minutes. Done?"="github_pat_[redacted]". Read the answers carefully — they may request clarification, changes, or that you not proceed — and follow what they actually say.
+```
+</details>
+
+<details><summary><code>Bash</code> · Cancel the unused GitHub device sign-in</summary>
+
+```bash
+pkill -f "gh auth login" 2>/dev/null; echo "device sign-in cancelled"; gh auth status 2>&1 | grep -E "account" | head -3
+```
+
+Output:
+```
+device sign-in cancelled
+  ✓ Logged in to github.com account Nihar[employer] (keyring)
+  - Active account: true
+```
+</details>
+
+<details><summary><code>Edit</code> · <scratchpad>/export_history.py</summary>
+
+`<scratchpad>/export_history.py`
+```diff
+- (re.compile(r"\b(gsk_|sk-ant-api|sk-proj-|hf_|ghp_|AKIA)[A-Za-z0-9_\-]{12,}"), r"\1[redacted]"),
++ (re.compile(r"\b(gsk_|sk-ant-api|sk-proj-|hf_|ghp_|gho_|github_pat_|AKIA)[A-Za-z0-9_\-]{12,}"), r"\1[redacted]"),
+```
+</details>
+
+<details><summary><code>Bash</code> · Push the commit to niharkedia/finn using the provided token</summary>
+
+```bash
+GH_PUSH_TOKEN="$(/usr/bin/python3 -I -c 'import re,sys; s=open(sys.argv[1]).read(); m=re.findall(r"github_pat_[A-Za-z0-9_]{20,}", s); print(m[-1] if m else "")' ~/.claude/projects/-Users-nihar-kedia-enam-holdings/bf97fde9-dd94-4ad2-845d-777423ee0031.jsonl)" && test -n "$GH_PUSH_TOKEN" && export GH_PUSH_TOKEN && GIT_TERMINAL_PROMPT=0 git -c credential.helper= -c 'credential.helper=!f() { test "$1" = get && echo username=niharkedia && echo "password=$GH_PUSH_TOKEN"; }; f' push -u origin main 2>&1 | grep -v -i "github_pat_" ; unset GH_PUSH_TOKEN; echo "--- remote now:"; git ls-remote origin main; git log --oneline -1
+```
+
+Output:
+```
+remote: Permission to niharkedia/finn.git denied to niharkedia.
+fatal: unable to access 'https://github.com/niharkedia/finn.git/': The requested URL returned error: 403
+--- remote now:
+39bd55544d68ad674ffec41dd92b36f5a20ab75c	refs/heads/main
+f2effa8 FINN: a filtering investor agent for Indian equities
+```
+</details>
+
+<details><summary><code>AskUserQuestion</code> · </summary>
+
+```json
+{
+ "questions": [
+  {
+   "question": "Your token signs in as niharkedia but is read-only, so GitHub refused the push. To fix the same token: github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens → click your token → Edit. Set Repository access to \"Only select repositories\" → finn, then under Repository permissions set Contents to \"Read and write\", and Update. Don't paste anything here; I'll reuse the token I already have. Done?",
+   "header": "Token access",
+   "multiSelect": false,
+   "options": [
+    {
+     "label": "Done, updated it",
+     "description": "I retry the push with the same token."
+    },
+    {
+…
+```
+
+Output:
+```
+The user answered: "Your token signs in as niharkedia but is read-only, so GitHub refused the push. To fix the same token: github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens → click your token → Edit. Set Repository access to "Only select repositories" → finn, then under Repository permissions set Contents to "Read and write", and Update. Don't paste anything here; I'll reuse the token I already have. Done?"="i have done it ". Read the answers carefully — they may request clarification, changes, or that you not proceed — and follow what they actually say.
+```
+</details>
+
+
+**Claude:** Retrying the push. If you put a new token in `.env`, it uses that; otherwise the updated one.
+
+<details><summary><code>Bash</code> · Retry the push to niharkedia/finn</summary>
+
+```bash
+GH_PUSH_TOKEN="$(grep -E '^(export )?GITHUB_TOKEN=' .env 2>/dev/null | tail -1 | cut -d= -f2- | tr -d '"'"'"' ')" ; if [ -z "$GH_PUSH_TOKEN" ]; then echo "using the token from the chat"; GH_PUSH_TOKEN="$(/usr/bin/python3 -I -c 'import re,sys; s=open(sys.argv[1]).read(); m=re.findall(r"github_pat_[A-Za-z0-9_]{20,}", s); print(m[-1] if m else "")' ~/.claude/projects/-Users-nihar-kedia-enam-holdings/bf97fde9-dd94-4ad2-845d-777423ee0031.jsonl)"; else echo "using GITHUB_TOKEN from .env"; fi; test -n "$GH_PUSH_TOKEN" && export GH_PUSH_TOKEN && GIT_TERMINAL_PROMPT=0 git -c credential.helper= -c 'credential.helper=!f() { test "$1" = get && echo username=niharkedia && echo "password=$GH_PUSH_TOKEN"; }; f' push -u origin main 2>&1 | grep -v -i "github_pat_"; unset GH_PUSH_TOKEN; echo "--- remote now:"; git ls-remote origin main; git log --oneline -1
+```
+
+Output:
+```
+using the token from the chat
+remote: Permission to niharkedia/finn.git denied to niharkedia.
+fatal: unable to access 'https://github.com/niharkedia/finn.git/': The requested URL returned error: 403
+--- remote now:
+39bd55544d68ad674ffec41dd92b36f5a20ab75c	refs/heads/main
+f2effa8 FINN: a filtering investor agent for Indian equities
+```
+</details>
+
+
+**Claude:** Still refused, same error. Before asking you to change anything again, I'll ask GitHub's API what this token is actually allowed to do on the repo, again without displaying it:
+
+<details><summary><code>Bash</code> · Ask GitHub what the token may do on the repo</summary>
+
+```bash
+.venv/bin/python - <<'EOF'
+import re, requests, truststore
+truststore.inject_into_ssl()
+s = open("~/.claude/projects/-Users-nihar-kedia-enam-holdings/bf97fde9-dd94-4ad2-845d-777423ee0031.jsonl").read()
+tok = re.findall(r"github_pat_[A-Za-z0-9_]{20,}", s)[-1]
+h = {"Authorization": f"Bearer {tok}", "Accept": "application/vnd.github+json"}
+u = requests.get("https://api.github.com/user", headers=h, timeout=20)
+print("user:", u.status_code, u.json().get("login"), "| token expires:", u.headers.get("github-authentication-token-expiration"))
+r = requests.get("https://api.github.com/repos/niharkedia/finn", headers=h, timeout=20)
+d = r.json()
+print("repo:", r.status_code, d.get("full_name"), "| private:", d.get("private"), "| permissions seen by API:", d.get("permissions"))
+# a write-scoped endpoint, read-only call: lists deploy keys (needs admin) -> shows what the token lacks without changing anything
+t = requests.get("https://api.github.com/repos/niharkedia/finn/git/refs/heads/main", headers=h, timeout=20)
+print("read refs:", t.status_code)
+p = requests.post("https://api.github.com/repos/niharkedia/finn/git/blobs", headers=h, json={"content": "permission probe", "encoding": "utf-8"}, timeout=20)
+print("create blob (needs contents:write; creates no commit):", p.status_code, p.json().get("message", "ok") if p.status_code != 201 else "allowed", "| needs:", p.headers.get("x-accepted-github-permissions"))
+EOF
+```
+
+Output:
+```
+user: 200 niharkedia | token expires: None
+repo: 200 niharkedia/finn | private: False | permissions seen by API: {'admin': True, 'maintain': True, 'push': True, 'triage': True, 'pull': True}
+read refs: 200
+create blob (needs contents:write; creates no commit): 403 Resource not accessible by personal access token | needs: contents=write
+```
+</details>
+
+<details><summary><code>AskUserQuestion</code> · </summary>
+
+```json
+{
+ "questions": [
+  {
+   "question": "GitHub says the token still lacks \"Contents: write\". On the token's edit page, check exactly these, then click Update at the bottom:\n- Repository access: \"Only select repositories\" with finn selected. If it says \"Public repositories (read-only)\", write access is impossible.\n- Permissions → Repository permissions → Contents: \"Read and write\". This is a separate list from Account permissions.\n\nOr, quicker: Tokens (classic) → Generate new token (classic) → tick \"public_repo\" → Generate, then put it in enam_holdings/.env as GITHUB_TOKEN=... without pasting it here. Which did you do?",
+   "header": "Token fix",
+   "multiSelect": false,
+   "options": [
+    {
+     "label": "Fixed the same token",
+     "description": "I retry with the token I already have."
+    },
+    {
+…
+```
+
+Output:
+```
+The user answered: "GitHub says the token still lacks "Contents: write". On the token's edit page, check exactly these, then click Update at the bottom:
+- Repository access: "Only select repositories" with finn selected. If it says "Public repositories (read-only)", write access is impossible.
+- Permissions → Repository permissions → Contents: "Read and write". This is a separate list from Account permissions.
+
+Or, quicker: Tokens (classic) → Generate new token (classic) → tick "public_repo" → Generate, then put it in enam_holdings/.env as GITHUB_TOKEN=... without pasting it here. Which did you do?"="enam
+
+No description
+
+Created today.
+ This token has no expiration date
+Access on @niharkedia niharkedia
+Repository access
+Select the repositories this token can access. Personal access tokens can always read from all public repositories on GitHub.com
+Repository access
+…
+```
+</details>
+
+<details><summary><code>Bash</code> · Check GitHub CLI version supports multiple accounts</summary>
+
+```bash
+gh --version | head -1
+```
+
+Output:
+```
+gh version 2.96.0 (2026-07-02)
+```
+</details>
+
+
+**Claude:** Version 2.96 holds several accounts, so your work login stays. Starting the sign-in:
+
+<details><summary><code>Bash</code> · Start a new GitHub device sign-in</summary>
+
+```bash
+gh auth login --hostname github.com --git-protocol https --web --skip-ssh-key < /dev/null > <scratchpad>/gh_login2.log 2>&1; echo "exit $?" >> <scratchpad>/gh_login2.log
+```
+
+Output:
+```
+Command running in background with ID: be7u5ygmf. Output is being written to: <temp> You will be notified when it completes — do not poll that file or sleep while waiting. Read the file only if the user asks for progress, or if you need a line it prints before you can go on, such as a server's ready line or port.
+```
+</details>
+
+<details><summary><code>Bash</code> · Read the new one-time code</summary>
+
+```bash
+F=<scratchpad>/gh_login2.log; for i in $(seq 1 30); do grep -q -E "one-time code|exit|error" $F 2>/dev/null && break; perl -e 'select(undef,undef,undef,0.5)'; done; grep -E "code|URL" $F
+```
+
+Output:
+```
+! First copy your one-time code: 0836-B599
+Open this URL to continue in your web browser: https://github.com/login/device
+```
+</details>
+
+<details><summary><code>AskUserQuestion</code> · </summary>
+
+```json
+{
+ "questions": [
+  {
+   "question": "Three clicks, no tokens:\n1. Open https://github.com/login/device. Your browser is already signed in as niharkedia.\n2. Type the code 0836-B599 and click Continue.\n3. Click \"Authorize GitHub CLI\".\n\nThen tell me it's done, and I'll push.",
+   "header": "Sign in",
+   "multiSelect": false,
+   "options": [
+    {
+     "label": "Done, authorized",
+     "description": "I confirm the sign-in is niharkedia, push the code, then switch the GitHub tool back to your work account."
+    },
+    {
+…
+```
+
+Output:
+```
+Your questions have been answered: "Three clicks, no tokens:
+1. Open https://github.com/login/device. Your browser is already signed in as niharkedia.
+2. Type the code 0836-B599 and click Continue.
+3. Click "Authorize GitHub CLI".
+
+Then tell me it's done, and I'll push."="Done, authorized". You can now continue with these answers in mind.
+```
+</details>
+
+
+**Claude:** The sign-in completed. Confirming it's `niharkedia` before pushing:
+
+<details><summary><code>Bash</code> · Verify which GitHub account is now active</summary>
+
+```bash
+tail -3 <scratchpad>/gh_login2.log | sed -E 's/(gh[ops]_)[A-Za-z0-9]+/\1[hidden]/g'; gh auth status 2>&1 | grep -E "Logged in|Active account" | sed -E 's/(gh[ops]_)[A-Za-z0-9]+/\1[hidden]/g'; echo "active login: $(gh api user --jq .login 2>&1)"
+```
+
+Output:
+```
+✓ Configured git protocol
+✓ Logged in as niharkedia
+exit 0
+  ✓ Logged in to github.com account niharkedia (keyring)
+  - Active account: true
+  ✓ Logged in to github.com account Nihar[employer] (keyring)
+  - Active account: false
+active login: niharkedia
+```
+</details>
+
+
+**Claude:** Signed in as `niharkedia`, and your work account is still there alongside it. Pushing:
+
+<details><summary><code>Bash</code> · Push the commit as niharkedia</summary>
+
+```bash
+GIT_TERMINAL_PROMPT=0 git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push -u origin main 2>&1 | sed -E 's/(gh[ops]_|github_pat_)[A-Za-z0-9_]+/\1[hidden]/g'; echo "--- remote vs local:"; git ls-remote origin main; git rev-parse HEAD
+```
+
+Output:
+```
+To https://github.com/niharkedia/finn.git
+   39bd555..f2effa8  main -> main
+branch 'main' set up to track 'origin/main'.
+--- remote vs local:
+f2effa8426569719d5ece0970eb965bbd490e5b5	refs/heads/main
+f2effa8426569719d5ece0970eb965bbd490e5b5
+```
+</details>
+
+
+**Claude:** Pushed: GitHub's `main` now matches your local commit (`f2effa8`). Switching the GitHub tool back to your work account so nothing else on your Mac changes, then confirming what's on GitHub:
+
+<details><summary><code>Bash</code> · Restore the work account and verify the GitHub repo</summary>
+
+```bash
+gh auth switch --hostname github.com --user Nihar[employer] 2>&1 | tail -1; gh auth status 2>&1 | grep -E "account|Active" | sed -E 's/(gh[ops]_)[A-Za-z0-9]+/\1[hidden]/g'; echo "git global credential helper (should be unchanged/empty): '$(git config --global credential.helper)'"; cd ~/enam_holdings && echo "token in pushed files: $(git grep -c 'github_pat_' HEAD -- . ':!seed/finn.db' | wc -l | tr -d ' ') files"; .venv/bin/python -c "
+import requests, truststore; truststore.inject_into_ssl()
+r = requests.get('https://api.github.com/repos/niharkedia/finn/contents/', timeout=20)
+print('on GitHub:', sorted(f['name'] for f in r.json()))
+c = requests.get('https://api.github.com/repos/niharkedia/finn/commits/main', timeout=20).json()
+print('latest commit:', c['sha'][:7], '|', c['commit']['author']['name'], '|', (c.get('author') or {}).get('login'), '|', c['commit']['message'].splitlines()[0])
+"
+```
+
+Output:
+```
+✓ Switched active account for github.com to Nihar[employer]
+  ✓ Logged in to github.com account Nihar[employer] (keyring)
+  - Active account: true
+  ✓ Logged in to github.com account niharkedia (keyring)
+  - Active account: false
+git global credential helper (should be unchanged/empty): ''
+token in pushed files: 0 files
+on GitHub: ['.dockerignore', '.gitignore', 'Dockerfile', 'FINN_research_plan.md', 'README.md', 'ai-build-history', 'finn', 'render.yaml', 'requirements.txt', 'seed', 'web']
+latest commit: f2effa8 | Nihar Kedia | niharkedia | FINN: a filtering investor agent for Indian equities
+```
+</details>
+
+
+**Claude:** Your code is on GitHub: https://github.com/niharkedia/finn
+
+- **Under your name:** the commit is authored by **Nihar Kedia** and linked to your `niharkedia` account. As you asked, there's no Claude co-author line.
+- **What's in it:** the app code, the README, the research plan, `render.yaml`, the starter database and the AI build history.
+- **What was kept out:** your `.env` keys, your local database, the ENAM PDFs and the email draft. I checked GitHub's copy: no keys or personal details made it in.
+- **Your Mac:** the GitHub tool is back on your work account as before. `niharkedia` stays signed in alongside it, so future pushes need no codes.
+
+**Delete the "enam" token you pasted in the chat.** It never got write access, but it's now in the chat log. On GitHub: Settings → Developer settings → Fine-grained tokens → enam → Delete. Any future build-history export will hide it.
+
+**Next: the phone link on Render, which is free.**
+1. Sign in at render.com with your `niharkedia` GitHub account.
+2. Choose New → Blueprint, then pick `niharkedia/finn`.
+3. Paste your Groq key when it asks for `GROQ_API_KEY`.
+
+Render gives you an `onrender.com` link. That goes in the email with `https://github.com/niharkedia/finn`, and then I'll refresh the build history so it ends with the deploy.
+
+
+---
+
+## Prompt 14 · 15 Nov 2026, 20:05 IST
+
+> vcp_[redacted] 
+> this is vercel token ,
+
+
+**Claude:** Got it, you'd like the link on Vercel. Two things first:
+- **The token is now in the chat log,** like the GitHub one. I'll read it from the session file so it never appears in my commands. It also goes on the build-history export's redaction list, and you should delete it on Vercel once the site is live.
+- **A limitation:** on Vercel, FINN only runs when someone opens it. It will show the snapshot data and on-demand research, but not the every-15-minutes filing checks. Render would have run those.
+
+Checking how Vercel currently runs a Python FastAPI app and the free-plan limits:
+
+<details><summary><code>Edit</code> · <scratchpad>/export_history.py</summary>
+
+`<scratchpad>/export_history.py`
+```diff
+- (re.compile(r"\b(gsk_|sk-ant-api|sk-proj-|hf_|ghp_|gho_|github_pat_|AKIA)[A-Za-z0-9_\-]{12,}"), r"\1[redacted]"),
++ (re.compile(r"\b(gsk_|sk-ant-api|sk-proj-|hf_|ghp_|gho_|github_pat_|vcp_|AKIA)[A-Za-z0-9_\-]{12,}"), r"\1[redacted]"),
+```
+</details>
+
+<details><summary><code>WebFetch</code> · https://vercel.com/docs/frameworks/backend/fastapi</summary>
+
+```json
+{
+ "url": "https://vercel.com/docs/frameworks/backend/fastapi",
+ "prompt": "How does Vercel deploy a FastAPI app with zero configuration? List: accepted entrypoint file names/locations and the required variable name; how dependencies are declared (requirements.txt / pyproject); how static files are served (public/ folder?); whether ASGI lifespan events run; whether the whole project directory is bundled into the function or only imported modules (and how to include extra data files, e.g. includeFiles / excludeFiles); Python version; any vercel.json needed. Quote exact lines."
+}
+```
+
+Output:
+```
+---
+title: Deploy a FastAPI app on Vercel
+product: vercel
+url: /docs/frameworks/backend/fastapi
+canonical_url: "https://vercel.com/docs/frameworks/backend/fastapi"
+last_updated: 2026-11-14
+type: how-to
+prerequisites:
+  - /docs/frameworks/backend
+  - /docs/frameworks
+related:
+  - /docs/cli/init
+  - /docs/functions/runtimes/python/python-version
+  - /docs/functions/runtimes/python
+…
+```
+</details>
+
+<details><summary><code>WebFetch</code> · https://vercel.com/docs/functions/limitations</summary>
+
+```json
+{
+ "url": "https://vercel.com/docs/functions/limitations",
+ "prompt": "For the Hobby (free) plan, list exactly: max function duration (default and maximum, with fluid compute), memory, bundle size limit (especially Python), /tmp writable size, request body/response size limits. Also: are cron jobs on Hobby limited to once per day? Quote exact numbers."
+}
+```
+
+Output:
+```
+---
+title: Vercel Functions Limits
+product: vercel
+url: /docs/functions/limitations
+canonical_url: "https://vercel.com/docs/functions/limitations"
+last_updated: 2026-08-24
+type: reference
+prerequisites:
+  - /docs/functions
+related:
+  - /docs/functions/runtimes/python
+  - /docs/functions/concurrency-scaling
+  - /docs/functions/runtimes
+  - /docs/functions/configuring-functions/region
+…
+```
+</details>
+
+<details><summary><code>Write</code> · ~/enam_holdings/app.py</summary>
+
+`~/enam_holdings/app.py` (2 lines)
+```
+"""Vercel's FastAPI entrypoint (Vercel looks for `app` in app.py)."""
+from finn.api import app  # noqa: F401
+```
+</details>
+
+<details><summary><code>Write</code> · ~/enam_holdings/vercel.json</summary>
+
+`~/enam_holdings/vercel.json` (9 lines)
+```
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "app.py": {
+      "maxDuration": 300,
+      "includeFiles": "{seed,web}/**"
+    }
+  }
+}
+```
+</details>
+
+<details><summary><code>Write</code> · ~/enam_holdings/.python-version</summary>
+
+`~/enam_holdings/.python-version` (1 lines)
+```
+3.12
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/finn/config.py</summary>
+
+`~/enam_holdings/finn/config.py`
+```diff
+- DB_PATH = Path(os.getenv("FINN_DB", ROOT / "data" / "finn.db"))
++ DB_PATH = Path(os.getenv("FINN_DB") or ("/tmp/finn.db" if os.getenv("VERCEL") else ROOT / "data" / "finn.db"))  # Vercel: only /tmp is writable
+```
+</details>
+
+
+**Claude:** Checking the database path switches only on Vercel, without creating anything:
+
+<details><summary><code>Bash</code> · Check the database path per environment and vercel.json</summary>
+
+```bash
+VERCEL=1 .venv/bin/python -c "from finn import config; print('on Vercel ->', config.DB_PATH)" && .venv/bin/python -c "from finn import config; print('locally   ->', config.DB_PATH)" && python3 -c "import json; json.load(open('vercel.json')); print('vercel.json is valid JSON')"
+```
+
+Output:
+```
+on Vercel -> /tmp/finn.db
+locally   -> ~/enam_holdings/data/finn.db
+vercel.json is valid JSON
+```
+</details>
+
+<details><summary><code>Write</code> · <scratchpad>/deploy_vercel.py</summary>
+
+`<scratchpad>/deploy_vercel.py` (75 lines)
+```
+"""Deploy FINN to Vercel through its REST API. Prints no secrets.
+The Vercel token is read from this session's transcript (the user pasted it there); the Groq key from the project's .env."""
+import hashlib
+import os
+import re
+import sys
+import time
+from pathlib import Path
+
+import requests
+import truststore
+
+truststore.inject_into_ssl()
+PROJECT = Path("~/enam_holdings")
+sys.path.insert(0, str(PROJECT))
+import finn.config  # noqa: E402,F401  (loads .env)
+
+TRANSCRIPT = Path.home() / ".claude/projects/-Users-nihar-kedia-enam-holdings/bf97fde9-dd94-4ad2-845d-777423ee0031.jsonl"
+TOKEN = re.findall(r"vcp_[A-Za-z0-9]{20,}", TRANSCRIPT.read_text())[-1]
+API = "https://api.vercel.com"
+…
+```
+</details>
+
+<details><summary><code>Bash</code> · Deploy FINN to Vercel via its API</summary>
+
+```bash
+.venv/bin/python <scratchpad>/deploy_vercel.py 2>&1 | sed -E 's/(vcp_|gsk_|github_pat_)[A-Za-z0-9_]+/\1[hidden]/g' | tail -60
+```
+
+Output:
+```
+vercel account: niharkstellar-7357 | scope: team
+project: created
+GROQ_API_KEY set: True 
+uploaded 17 files
+deployment: dpl_BkZ8P4EbX5j9qNGUu2PPwwj18N2v INITIALIZING
+state: READY
+production domains: ['finn-silk.vercel.app']
+```
+</details>
+
+
+**Claude:** It's deployed: Vercel reports **READY** at `finn-silk.vercel.app`. Before telling you it works, I'll test the live site the way a reviewer would: the page, the status, the 30-day digest and a ledger.
+
+<details><summary><code>Bash</code> · Test the live Vercel site end to end</summary>
+
+```bash
+.venv/bin/python - <<'EOF'
+import time, requests, truststore
+truststore.inject_into_ssl()
+B = "https://finn-silk.vercel.app"
+def get(path, **kw):
+    t = time.time(); r = requests.get(B + path, timeout=300, **kw); return r, time.time() - t
+r, s = get("/"); print(f"page: {r.status_code} in {s:.1f}s | {'FINN' in r.text and 'app.js' in r.text}")
+r, s = get("/app.js"); print(f"app.js: {r.status_code} {len(r.content)} bytes in {s:.1f}s")
+r, s = get("/api/status"); d = r.json() if r.ok else {}
+print(f"status: {r.status_code} in {s:.1f}s | model: {d.get('llm')!r} | stocks: {len(d.get('portfolio', []))} | last poll: {d.get('last_poll')}")
+r, s = get("/api/digest?hours=720"); d = r.json() if r.ok else {}
+print(f"30-day digest: {r.status_code} in {s:.1f}s | material {len(d.get('material', []))} | routine {len(d.get('routine', []))}")
+r, s = get("/api/company/KPITTECH"); d = r.json() if r.ok else {}
+L = d.get("ledger") or {}
+print(f"KPIT research: {r.status_code} in {s:.1f}s | {d.get('name')} | ledger claims {len(L.get('claims', []))} | verdict: {((L.get('analysis') or {}).get('verdict') or '-')[:80]}")
+r, s = get("/api/company/ASIANPAINT"); d = r.json() if r.ok else {"detail": r.text[:200]}
+print(f"any ticker (ASIANPAINT): {r.status_code} in {s:.1f}s | {d.get('name') or d.get('detail')}")
+EOF
+```
+
+Output:
+```
+page: 200 in 0.7s | True
+app.js: 200 18275 bytes in 0.6s
+status: 200 in 0.8s | model: 'openai/gpt-oss-120b' | stocks: 18 | last poll: 2026-11-15T18:57:12+05:30
+30-day digest: 200 in 0.6s | material 34 | routine 55
+KPIT research: 200 in 0.4s | KPIT Technologies Ltd | ledger claims 8 | verdict: Management's statements have so far not been contradicted by results; the only t
+any ticker (ASIANPAINT): 200 in 2.2s | Asian Paints Ltd
+```
+</details>
+
+<details><summary><code>Bash</code> · Build a new ledger live on Vercel; check background polling</summary>
+
+```bash
+.venv/bin/python - <<'EOF'
+import time, requests, truststore
+truststore.inject_into_ssl()
+B = "https://finn-silk.vercel.app"
+t = time.time()
+r = requests.post(B + "/api/company/ASIANPAINT/ledger", timeout=310)
+d = r.json() if r.headers.get("content-type", "").startswith("application/json") else {"detail": r.text[:200]}
+if r.ok:
+    a = d.get("analysis") or {}
+    print(f"ASIANPAINT ledger on Vercel: {time.time() - t:.0f}s | calls {[c['date'] for c in d.get('calls', [])]} | claims {len(d.get('claims', []))}")
+    print("verdict:", (a.get("verdict") or "-")[:160])
+else:
+    print(f"ledger: HTTP {r.status_code} after {time.time() - t:.0f}s | {str(d.get('detail'))[:200]}")
+s = requests.get(B + "/api/status", timeout=60).json()
+print("last poll now:", s.get("last_poll"), "| last end-of-day:", s.get("last_eod"))
+EOF
+```
+
+Output:
+```
+ASIANPAINT ledger on Vercel: 69s | calls ['2026-02-02', '2026-06-03', '2026-08-03', '2026-11-03'] | claims 21
+verdict: Too early to judge; the next target to be assessed is the 5% revenue growth for Q4 FY26 (C2).
+last poll now: 2026-11-15T20:09:15+05:30 | last end-of-day: 2026-11-15T18:57:15+05:30
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/README.md</summary>
+
+`~/enam_holdings/README.md`
+```diff
+- **Point of view:**
++ **Live:** https://finn-silk.vercel.app (best on a phone) · **Code:** https://github.com/niharkedia/finn
++ 
++ **Point of view:**
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/README.md</summary>
+
+`~/enam_holdings/README.md`
+```diff
+- runs it on any container host. To host it free on Render,
++ runs it on any container host. The live copy runs on Vercel's free Hobby plan: `app.py` is Vercel's FastAPI entrypoint, `vercel.json` bundles the starter database, and Vercel runs the background checker whenever an instance is awake. To host it free on Render instead,
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/COVERING_EMAIL.md</summary>
+
+`~/enam_holdings/COVERING_EMAIL.md`
+```diff
+- - Prototype (best on a phone): [RENDER LINK]
+-   It runs on Render's free plan, so the first visit after a quiet spell takes about a minute to wake up.
+- - Repository: [GITHUB LINK]
++ - Prototype (best on a phone): https://finn-silk.vercel.app
++ - Repository: https://github.com/niharkedia/finn
 ```
 </details>

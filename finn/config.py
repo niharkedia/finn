@@ -8,7 +8,7 @@ for line in (ROOT / ".env").read_text().splitlines() if (ROOT / ".env").is_file(
     if sep and not name.lstrip().startswith("#"):
         os.environ.setdefault(name.strip().removeprefix("export "), value.strip().strip("\"'"))
 
-DB_PATH = Path(os.getenv("FINN_DB", ROOT / "data" / "finn.db"))
+DB_PATH = Path(os.getenv("FINN_DB") or ("/tmp/finn.db" if os.getenv("VERCEL") else ROOT / "data" / "finn.db"))  # Vercel: only /tmp is writable
 POLL_SECONDS = int(os.getenv("FINN_POLL_SECONDS", "900"))
 APP_URL = os.getenv("FINN_APP_URL", "")  # public URL, used for deep links in Telegram pushes
 
