@@ -4,7 +4,7 @@ import threading
 from contextlib import asynccontextmanager
 
 import requests
-from fastapi import FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -19,7 +19,8 @@ class Feedback(BaseModel):
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    if os.getenv("FINN_SCHEDULER", "1") == "1":
+    # Vercel pauses idle instances mid-job, so there the refresh runs per visit instead (see /api/status).
+    if os.getenv("FINN_SCHEDULER", "0" if os.getenv("VERCEL") else "1") == "1":
         threading.Thread(target=service.scheduler, daemon=True).start()
     yield
 
@@ -47,7 +48,9 @@ def alerts(days: int = 7):
 
 
 @app.get("/api/status")
-def status():
+def status(background: BackgroundTasks):
+    if service.stale():  # every screen asks for status, so a visit after a quiet spell refreshes right after replying
+        background.add_task(service.run_jobs)
     return service.status()
 
 

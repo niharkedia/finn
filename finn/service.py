@@ -226,6 +226,11 @@ def alerts(days: int) -> list[dict]:
     return store.rows("SELECT * FROM alerts WHERE ts >= ? ORDER BY ts DESC, severity DESC", (since,))
 
 
+def stale() -> bool:
+    """The last poll is older than the poll interval and no job is running (free hosts pause threads between visits)."""
+    return store.get("job", "poll", max_age=POLL_SECONDS) is None and not _jobs.locked()
+
+
 def status() -> dict:
     names = {r["key"]: r["name"] for r in store.rows("SELECT key, json_extract(value, '$.name') AS name FROM kv WHERE ns = 'company'")}
     return {"portfolio": [{"symbol": s, "name": names.get(s, s)} for s in PORTFOLIO],

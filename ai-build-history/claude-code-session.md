@@ -1,6 +1,6 @@
 # FINN: AI build history
 
-The complete Claude Code session in which FINN was planned and built, 13 Nov 23:33 to 15 Nov 20:10 IST, 2026 (Claude Opus 5.5, VS Code extension). 14 prompts and 367 tool calls.
+The complete Claude Code session in which FINN was planned and built, 13 Nov 23:33 to 15 Nov 20:28 IST, 2026 (Claude Opus 5.5, VS Code extension). 18 prompts and 398 tool calls.
 
 Every prompt, every reply and every tool call (shell commands, file writes and edits, web searches) is here in order. Tool output is trimmed to its first lines, and file writes show their opening lines; the finished code is in the repository. The agent's private reasoning and the context the editor injects automatically are left out. Personal details (email, employer, home folder) are redacted.
 
@@ -8392,5 +8392,720 @@ last poll now: 2026-11-15T20:09:15+05:30 | last end-of-day: 2026-11-15T18:57:15+
 - - Repository: [GITHUB LINK]
 + - Prototype (best on a phone): https://finn-silk.vercel.app
 + - Repository: https://github.com/niharkedia/finn
+```
+</details>
+
+<details><summary><code>Bash</code> · Refresh the history, stage changes, scan for secrets</summary>
+
+```bash
+.venv/bin/python -I <scratchpad>/export_history.py ~/.claude/projects/-Users-nihar-kedia-enam-holdings/bf97fde9-dd94-4ad2-845d-777423ee0031.jsonl ai-build-history/claude-code-session.md && git add -A && git diff --cached --name-only | tr '\n' ' ' && echo && git diff --cached --name-only | grep -E "^\.env$|^data/|\.pdf$|COVERING_EMAIL" || echo "excluded files still excluded" && for p in "vcp_[A-Za-z0-9]{10}" "github_pat_[A-Za-z0-9]{10}" "gsk_[A-Za-z0-9]{10}" "hf_[A-Za-z0-9]{10}" "ASIA[0-9A-Z]{16}" "[redacted]" "[redacted]" "[employer]" "nihar\.kedia@"; do printf "%s=%s " "$p" "$(git grep --cached -c -i -E "$p" -- . ':!seed/finn.db' | awk -F: '{s+=$NF} END {print s+0}')"; done; echo
+```
+
+Output:
+```
+14 prompts, 367 tool calls -> ai-build-history/claude-code-session.md
+.python-version README.md ai-build-history/claude-code-session.md app.py finn/config.py vercel.json 
+excluded files still excluded
+vcp_[A-Za-z0-9]{10}=0 github_pat_[A-Za-z0-9]{10}=0 gsk_[A-Za-z0-9]{10}=0 hf_[A-Za-z0-9]{10}=0 ASIA[0-9A-Z]{16}=0 [redacted]=0 [redacted]=0 [employer]=0 nihar\.kedia@=0
+```
+</details>
+
+
+**Claude:** Clean: both tokens you pasted are redacted in the refreshed history, and no other secrets or personal details appear. Committing as you and pushing:
+
+<details><summary><code>Bash</code> · Commit the Vercel setup and push as niharkedia</summary>
+
+```bash
+git commit -q -m "Deploy on Vercel: FastAPI entrypoint, function config, live links" -m "app.py exposes the app for Vercel, vercel.json bundles the starter database and allows 5-minute requests, and the database defaults to /tmp on Vercel. The README links the live app, and the build history is refreshed." && GH_PUSH_TOKEN="$(gh auth token --hostname github.com --user niharkedia 2>/dev/null)" && test -n "$GH_PUSH_TOKEN" && export GH_PUSH_TOKEN && GIT_TERMINAL_PROMPT=0 git -c credential.helper= -c 'credential.helper=!f() { test "$1" = get && echo username=niharkedia && echo "password=$GH_PUSH_TOKEN"; }; f' push origin main 2>&1 | sed -E 's/(gh[ops]_|github_pat_)[A-Za-z0-9_]+/\1[hidden]/g'; unset GH_PUSH_TOKEN; git log --format='%h %an | %s' -3; echo "remote: $(git ls-remote origin main | cut -c1-7)"; echo "gh active account: $(gh api user --jq .login)"
+```
+
+Output:
+```
+To https://github.com/niharkedia/finn.git
+   f2effa8..94f7a7b  main -> main
+94f7a7b Nihar Kedia | Deploy on Vercel: FastAPI entrypoint, function config, live links
+f2effa8 Nihar Kedia | FINN: a filtering investor agent for Indian equities
+39bd555 shadow_tes | Initial commit
+remote: 94f7a7b
+gh active account: Nihar[employer]
+```
+</details>
+
+<details><summary><code>Edit</code> · <scratchpad>/page/finn-submission-check.html</summary>
+
+`<scratchpad>/page/finn-submission-check.html`
+```diff
+- code, .t { font-family: var(--mono); font-size: 0.92em; }
++ code, .t { font-family: var(--mono); font-size: 0.92em; }
++ a { color: var(--accent); text-underline-offset: 2px; }
+```
+</details>
+
+<details><summary><code>Edit</code> · <scratchpad>/page/finn-submission-check.html</summary>
+
+`<scratchpad>/page/finn-submission-check.html`
+```diff
+- <h1>Two steps from sending</h1>
+-     <p class="lede">The Promise Ledger now runs live on free open-weight models. The app builds and runs as a Docker image, the build history is exported and the covering email is drafted. What's left is the GitHub repository and the Render deploy that follows it.</p>
++ <h1>Ready to send</h1>
++     <p class="lede">FINN is live on Vercel's free plan, and the code is on GitHub under your name. The Promise Ledger runs live on free open-weight models, the build history is exported, and the covering email has both links. All that's left is to send it.</p>
+```
+</details>
+
+<details><summary><code>Edit</code> · <scratchpad>/page/finn-submission-check.html</summary>
+
+`<scratchpad>/page/finn-submission-check.html`
+```diff
+- <li class="row"><b>A link reviewers can open on a phone</b><span class="pill partly">Ready to deploy</span>
+-         <p>The Docker image builds and runs on this Mac with the model on. <code>render.yaml</code> makes Render a one-click deploy once the code is on GitHub. Hugging Face now charges for app hosting, so it's out.</p></li>
+-       <li class="row"><b>The GitHub repository</b><span class="pill bad">Not done</span>
+-         <p>You chose to do this later. The ignore files already keep out the database, the PDFs, the virtual environment and the <code>.env</code> file that holds your keys.</p></li>
+-       <li class="row"><b>Your AI build history</b><span class="pill done">Done</span>
+-         <p><code>ai-build-history/claude-code-session.md</code> holds every prompt, reply and tool call, with personal details redacted. Refresh it once after the last session.</p></li>
+-       <li class="row"><b
+- …
++ <li class="row"><b>A link reviewers can open on a phone</b><span class="pill done">Done</span>
++         <p><a href="https://finn-silk.vercel.app">finn-silk.vercel.app</a>, on Vercel's free Hobby plan. Tested live: the digest, the ledgers, a new ledger for Asian Paints built in 69 seconds, and the background filing checker.</p></li>
++       <li class="row"><b>The GitHub repository</b><span class="pill done">Done</span>
++         <p><a href="https://github.com/niharkedia/finn">github.com/niharkedia/finn</a>, committed as Nihar Kedia. Your keys, local database, the ENAM PDFs and the email draft were kept out.</p></li>
++       <li class="row"><b>Your AI build history</b><span class="pill done">Done</span>
++         <p><code>ai-build-history/claude-code-session.md</code> holds every prompt, reply and tool call, with personal details and the tokens pasted in chat redacted. It is also in the repository.</p></li>
++       <li class="row"><b>A short write-up in the covering email</b><span class="pill done">Done</span>
++         <p><code>COVERING_EMAIL.md</code> has both links. Add your name and phone number.</p></li>
+```
+</details>
+
+<details><summary><code>Edit</code> · <scratchpad>/page/finn-submission-check.html</summary>
+
+`<scratchpad>/page/finn-submission-check.html`
+```diff
+- <p>Render's free plan sleeps when nobody visits, so the first visit takes about a minute. FINN then opens with content, because a fresh host starts from a snapshot with recent filings and five ready-built ledgers.</p>
+-     <p>Groq's free tier caps tokens per day. A new ledger uses about 11,000 tokens and a cached one costs nothing. If the cap is hit, FINN says so instead of hanging.</p>
++ <p>Vercel starts fresh copies of the app as traffic comes and goes. Each copy opens with a snapshot of recent filings and five built ledgers, then checks for new filings in the background, so a ledger someone builds may need building again on another copy.</p>
++     <p>Groq's free tier caps tokens per day. A new ledger uses about 11,000 tokens and a built one costs nothing. If the cap is hit, FINN says so instead of hanging.</p>
+```
+</details>
+
+<details><summary><code>Edit</code> · <scratchpad>/page/finn-submission-check.html</summary>
+
+`<scratchpad>/page/finn-submission-check.html`
+```diff
+- <li><div><b>Push to a new GitHub repository</b><p>Create it inside <code>enam_holdings</code>. Your home folder is also a git repository, so don't commit from there, and check that <code>.env</code> is not in the first commit.</p></div><span class="dur">10 min</span></li>
+-       <li><div><b>Deploy on Render</b><p>New, then Blueprint, then pick the repository. Paste your Groq key when asked, then open the onrender.com link on your phone.</p></div><span class="dur">15 min</span></li>
+-       <li><div><b>Add Telegram (optional)</b><p>A bot token and chat ID turn on real push notifications.</p></div><span class="dur">10 min</span></li>
+-       <li><div><b>Refresh the build history</b><p>Ask Claude to re-run the export once the deploy is done, so the history ends with it.</p></div><span class="dur">2 min</span></li>
+-       <li><div><b>Send the email</b><p>Fill in the Render and GitHub links and you
+- …
++ <li><div><b>Open the link on your phone</b><p>Look at Today, Alerts and one ledger on <a href="https://finn-silk.vercel.app">finn-silk.vercel.app</a> yourself.</p></div><span class="dur">2 min</span></li>
++       <li><div><b>Delete the two tokens you pasted in chat</b><p>On GitHub, the "enam" fine-grained token. On Vercel, the token under Account Settings, then Tokens. Neither is needed now.</p></div><span class="dur">2 min</span></li>
++       <li><div><b>Send the email</b><p>Add your name and phone number to <code>COVERING_EMAIL.md</code>, attach the build history, and send it to the address above.</p></div><span class="dur">5 min</span></li>
++     </ol>
++     <p class="dur total">About 10 minutes in all.</p>
+```
+</details>
+
+<details><summary><code>Edit</code> · <scratchpad>/page/finn-submission-check.html</summary>
+
+`<scratchpad>/page/finn-submission-check.html`
+```diff
+- <footer>How this was checked: the Promise Ledger and executive profiles ran live on Groq's free tier; the image was built and run with Docker on this Mac; screenshots come from the starter database in headless Chrome. No Anthropic key was set, so the Claude path is untested.</footer>
++ <footer>How this was checked: the live site was tested on Vercel; the Promise Ledger and executive profiles ran live on Groq's free tier; the Docker image was built and run on this Mac; screenshots come from the starter database in headless Chrome. No Anthropic key was set, so the Claude path is untested.</footer>
+```
+</details>
+
+<details><summary><code>Artifact</code> · publish</summary>
+
+```json
+{
+ "action": "publish",
+ "file_path": "<scratchpad>/page/finn-submission-check.html"
+}
+```
+
+Output:
+```
+Published <scratchpad>/page/finn-submission-check.html at https://claude.ai/artifact/6PjeRv9b1iNfXAmNThmApQ (Version 3, version id 1794753697-d8a3)
+
+Live subscription: already connected from earlier in this session — this session keeps track of new versions of this artifact published elsewhere; a new version starts no turn and sends no notification; a comment on it sent to Claude reaches this session while this artifact's status row says auto-replies armed, and plain comments never notify — read them with the ArtifactComments tool, action "read" when asked.
+
+To update: publish the same file path here (keeps this URL); from another conversation pass the URL as `url`, or that publish creates a separate artifact. This artifact is private: only its owner and the people the owner has given access can open the link. You cannot change sharing; that is done from the page's Share menu. If the page is meant for someone else, tell the user when you present the page that those people cannot open it until it is shared with them.
+
+The files you sent are still on disk. For a small, specific change to a file whose text is in this conversation, send the Edit call(s) and an Artifact publish of the same file_path together in one response, with no Read and no shell command that edits the file: these calls run one after another in the order given, so the publish sends the edited file. If an Edit re
+…
+```
+</details>
+
+
+**Claude:** FINN is live on Vercel's free plan: **https://finn-silk.vercel.app**
+
+I tested the live site:
+- **The app:** the page loads in under a second.
+- **The model:** it's on, using gpt-oss-120b through your Groq key.
+- **Today's digest:** 34 material and 55 routine filings over 30 days.
+- **Research:** KPIT's Promise Ledger opens instantly.
+- **A company you didn't pick:** Asian Paints built a fresh ledger in 69 seconds.
+- **Background checks:** filings refresh while the site is in use.
+
+**Cost: nothing.** Vercel's free plan and Groq's free tier, no card on either.
+
+**GitHub is updated too:** https://github.com/niharkedia/finn now includes the Vercel setup, committed as Nihar Kedia. The email in `COVERING_EMAIL.md` has both links filled in. The status page shows "Ready to send": https://claude.ai/artifact/6PjeRv9b1iNfXAmNThmApQ
+
+**What's left, about 10 minutes:**
+1. Open the link on your phone once and check Today, Alerts and one ledger.
+2. **Delete the two tokens you pasted in chat.** On GitHub that's the "enam" token; on Vercel it's under Account Settings → Tokens. Neither is needed now, and both are in the chat log (they're hidden in the exported history).
+3. Add your name and phone number to the email, attach `ai-build-history/claude-code-session.md`, and send it to assessment@enam.com.
+
+On Vercel, FINN only checks for new filings while someone is using it. Each fresh copy of the app starts from today's snapshot, so a ledger someone builds may need building again later.
+
+
+---
+
+## Prompt 15 · 15 Nov 2026, 20:15 IST
+
+> give me the email draft now with github link and vercel link in. it and other required things in ut
+
+
+**Claude:** Written for: ENAM's assessment team.
+
+Updating `COVERING_EMAIL.md` to the final version:
+- **Links:** both are in, plus a direct link to the build history on GitHub.
+- **Free tiers:** a line telling reviewers what to expect from them.
+- **Sign-off:** your name instead of placeholders. The phone line is dropped, since the brief doesn't ask for it.
+
+<details><summary><code>Write</code> · ~/enam_holdings/COVERING_EMAIL.md</summary>
+
+`~/enam_holdings/COVERING_EMAIL.md` (41 lines)
+```
+To: assessment@enam.com
+Subject: IIT Delhi – AI Engineer - 2027
+Attachment: claude-code-session.md (from the ai-build-history folder)
+
+Hello ENAM team,
+
+Here is my submission for the FINN build challenge.
+
+- Prototype (best on a phone): https://finn-silk.vercel.app
+  It runs entirely on free tiers (Vercel, and open-weight models on Groq). Five research ledgers are pre-built; a ledger for a new company takes about a minute.
+- Repository: https://github.com/niharkedia/finn
+- AI build history: attached as claude-code-session.md, and also at https://github.com/niharkedia/finn/blob/main/ai-build-history/claude-code-session.md. It is the complete Claude Code session, from reading the brief to deployment.
+
+WHAT I BUILT
+
+FINN surfaces the few filings and price moves that matter in a portfolio and collapses the rest. It answers three questions an investor asks every day:
+
+- Today: what needs my attention? Every filing across an 18-stock portfolio in the window you pick, ranked by materiality, with routine paperwork collapsed. Results arrive as a Revenue, EBITDA, PBT and PAT card against last quarter and last year, built from the filed numbers. Management changes carry the new person's background, taken from the filing.
+- Alerts: tell me when my thresholds are crossed. Price and volume thresholds are one editable sentence, and moves are also shown against the Nifty, so a fall in a falling market reads as the non-event it is.
+- Research: can I trust what management says? The Promise Led
+…
+```
+</details>
+
+
+**Claude:** Checking that both links in the email open publicly, without any login:
+
+<details><summary><code>Bash</code> · Check the email's links open without a login</summary>
+
+```bash
+.venv/bin/python -c "
+import requests, truststore; truststore.inject_into_ssl()
+for u in ('https://finn-silk.vercel.app', 'https://github.com/niharkedia/finn', 'https://github.com/niharkedia/finn/blob/main/ai-build-history/claude-code-session.md'):
+    r = requests.get(u, timeout=30)
+    print(r.status_code, u)
+"
+```
+
+Output:
+```
+200 https://finn-silk.vercel.app
+200 https://github.com/niharkedia/finn
+200 https://github.com/niharkedia/finn/blob/main/ai-build-history/claude-code-session.md
+```
+</details>
+
+
+**Claude:** Written for: ENAM's assessment team.
+
+All three links open without a login. Here's the final email, also saved in [COVERING_EMAIL.md](COVERING_EMAIL.md):
+
+```
+To: assessment@enam.com
+Subject: IIT Delhi – AI Engineer - 2027
+Attachment: claude-code-session.md (from the ai-build-history folder)
+
+Hello ENAM team,
+
+Here is my submission for the FINN build challenge.
+
+- Prototype (best on a phone): https://finn-silk.vercel.app
+  It runs entirely on free tiers (Vercel, and open-weight models on Groq). Five research ledgers are pre-built; a ledger for a new company takes about a minute.
+- Repository: https://github.com/niharkedia/finn
+- AI build history: attached as claude-code-session.md, and also at https://github.com/niharkedia/finn/blob/main/ai-build-history/claude-code-session.md. It is the complete Claude Code session, from reading the brief to deployment.
+
+WHAT I BUILT
+
+FINN surfaces the few filings and price moves that matter in a portfolio and collapses the rest. It answers three questions an investor asks every day:
+
+- Today: what needs my attention? Every filing across an 18-stock portfolio in the window you pick, ranked by materiality, with routine paperwork collapsed. Results arrive as a Revenue, EBITDA, PBT and PAT card against last quarter and last year, built from the filed numbers. Management changes carry the new person's background, taken from the filing.
+- Alerts: tell me when my thresholds are crossed. Price and volume thresholds are one editable sentence, and moves are also shown against the Nifty, so a fall in a falling market reads as the non-event it is.
+- Research: can I trust what management says? The Promise Ledger reads the last four earnings-call transcripts of any NSE company, extracts each quantified promise with a verbatim quote, and checks it against the numbers reported later. For KPIT, it matched a quarter guided at -1% year-on-year against reported revenue growth of +8.8%.
+
+KEY DECISIONS AND TRADE-OFFS
+
+- Materiality is relative. FINN computes each company's SEBI materiality line (Regulation 30: the lowest of 2% of turnover, 2% of net worth and 5% of three-year average profit) and sizes orders, deals and capex against it. The same Rs 500 cr order is noise for Reliance and transformational for a small cap.
+- Code for every number. Results cards and promise checks use reported figures, never a model reading a PDF.
+- Rules first, models last. Rules classify 86 of 90 filings, a prefilter sends about 4% of transcript text to the model, and every model answer is cached. The model work runs on the open-weight gpt-oss-120b on Groq's free tier, so FINN costs nothing to run. I measured the smaller gpt-oss-20b first; it read past results as promises, so the larger model handles both tiers, with less reasoning effort for bulk extraction.
+- Grounded analysis. The model sees the company anonymised, must quote the transcript verbatim and must cite claim IDs. Points that cite unknown IDs, or numbers absent from the inputs, are dropped.
+- Data from screener.in's public pages, which give exchange filings with timestamps, standardised statements and transcript links in one place. I avoided NSE's undocumented API.
+
+DELIBERATELY LEFT OUT
+
+The business snapshot and segment mix, annual-report diffing, per-user accounts, intraday prices, and web push (Telegram push is built in instead).
+
+WHERE I'D TAKE IT NEXT
+
+Exchange XBRL results so cards are exact the minute results land; materiality weights learned from how the market actually reacted; annual-report diffs of contingent liabilities, related-party transactions and auditor remarks; and a cross-company view of peers guiding differently on the same cycle.
+
+Thank you for your time.
+
+Nihar Kedia
+IIT Delhi
+```
+
+To send it, paste this into your email, attach `ai-build-history/claude-code-session.md` from the project folder, and send it to assessment@enam.com. Add a phone number under your name if you want one; the brief doesn't require it.
+
+
+---
+
+## Prompt 16 · 15 Nov 2026, 20:18 IST
+
+> Hello ENAM team,
+> 
+> Here is my submission for the FINN build challenge.
+> 
+> - Prototype (best on a phone): https://finn-silk.vercel.app
+> It runs entirely on free tiers (Vercel, and open-weight models on Groq). Five research ledgers are pre-built; a ledger for a new company takes about a minute.
+> - Repository: https://github.com/niharkedia/finn
+> - AI build history: attached as claude-code-session.md, and also at https://github.com/niharkedia/finn/blob/main/ai-build-history/claude-code-session.md. It is the complete Claude Code session, from reading the brief to deployment.
+> 
+> WHAT I BUILT
+> 
+> FINN surfaces the few filings and price moves that matter in a portfolio and collapses the rest. It answers three questions an investor asks every day:
+> 
+> - Today: what needs my attention? Every filing across an 18-stock portfolio in the window you pick, ranked by materiality, with routine paperwork collapsed. Results arrive as a Revenue, EBITDA, PBT and PAT card against last quarter and last year, built from the filed numbers. Management changes carry the new person's background, taken from the filing.
+> - Alerts: tell me when my thresholds are crossed. Price and volume thresholds are one editable sentence, and moves are also shown against the Nifty, so a fall in a falling market reads as the non-event it is.
+> - Research: can I trust what management says? The Promise Ledger reads the last four earnings-call transcripts of any NSE company, extracts each quantified promise with a verbatim quote, and checks it against the numbers reported later. For KPIT, it matched a quarter guided at -1% year-on-year against reported revenue growth of +8.8%.
+> 
+> KEY DECISIONS AND TRADE-OFFS
+> 
+> - Materiality is relative. FINN computes each company's SEBI materiality line (Regulation 30: the lowest of 2% of turnover, 2% of net worth and 5% of three-year average profit) and sizes orders, deals and capex against it. The same Rs 500 cr order is noise for Reliance and transformational for a small cap.
+> - Code for every number. Results cards and promise checks use reported figures, never a model reading a PDF.
+> - Rules first, models last. Rules classify 86 of 90 filings, a prefilter sends about 4% of transcript text to the model, and every model answer is cached. The model work runs on the open-weight gpt-oss-120b on Groq's free tier, so FINN costs nothing to run. I measured the smaller gpt-oss-20b first; it read past results as promises, so the larger model handles both tiers, with less reasoning effort for bulk extraction.
+> - Grounded analysis. The model sees the company anonymised, must quote the transcript verbatim and must cite claim IDs. Points that cite unknown IDs, or numbers absent from the inputs, are dropped.
+> - Data from screener.in's public pages, which give exchange filings with timestamps, standardised statements and transcript links in one place. I avoided NSE's undocumented API.
+> 
+> DELIBERATELY LEFT OUT
+> 
+> The business snapshot and segment mix, annual-report diffing, per-user accounts, intraday prices, and web push (Telegram push is built in instead).
+> 
+> WHERE I'D TAKE IT NEXT
+> 
+> Exchange XBRL results so cards are exact the minute results land; materiality weights learned from how the market actually reacted; annual-report diffs of contingent liabilities, related-party transactions and auditor remarks; and a cross-company view of peers guiding differently on the same cycle.
+> 
+> Thank you for your time.
+> 
+> Nihar Kedia
+> IIT Delhi
+> 
+> 
+> this is done right
+
+
+**Claude:** Yes, the body is correct. It matches the final draft, and every claim in it is one I verified. Checking the live site once more right before you send:
+
+<details><summary><code>Bash</code> · Recheck the live site and the attachment file</summary>
+
+```bash
+.venv/bin/python -c "
+import requests, truststore; truststore.inject_into_ssl()
+B = 'https://finn-silk.vercel.app'
+print('site:', requests.get(B, timeout=60).status_code)
+s = requests.get(B + '/api/status', timeout=120).json(); print('model on:', bool(s.get('llm')), '| stocks:', len(s['portfolio']))
+d = requests.get(B + '/api/digest?hours=720', timeout=120).json(); print('digest items:', len(d['material']) + len(d['routine']))
+" && ls -la ai-build-history/claude-code-session.md
+```
+
+Output:
+```
+site: 200
+model on: True | stocks: 18
+digest items: 89
+-rw-r--r--@ 1 nihar.kedia  staff  442795 Nov 15 20:10 ai-build-history/claude-code-session.md
+```
+</details>
+
+
+**Claude:** Yes, it's right. The site is live right now: the model is on, all 18 stocks load, and the digest shows 89 filings.
+
+The body doesn't include these, so set them in your email app:
+- **To:** assessment@enam.com
+- **Subject:** `IIT Delhi – AI Engineer - 2027`. Copy it exactly; the first dash is a long dash, as in the brief.
+- **Attachment:** `claude-code-session.md` (443 KB), in `enam_holdings/ai-build-history/`.
+
+After sending, delete the two tokens you pasted in this chat: the "enam" token on GitHub and the token on Vercel.
+
+
+---
+
+## Prompt 17 · 15 Nov 2026, 20:18 IST
+
+> and the vercel app link and there layout is good right verything is working fine , right , have u tested all the necessar test done righ
+
+
+**Claude:** I tested the main data paths on the live site, but not everything. Three gaps:
+- **The layout:** I haven't looked at the live Vercel pages themselves. The screenshots came from my Mac running the same code.
+- **The Alerts and Settings data:** I haven't called those two from Vercel.
+- **The ↻ refresh and "Save and rescan" buttons:** these fetch prices from Yahoo, which sometimes blocks cloud servers.
+
+Testing those now, starting with the data behind each tab and both buttons:
+
+<details><summary><code>Bash</code> · Test each tab's API and both buttons on the live site</summary>
+
+```bash
+.venv/bin/python - <<'EOF'
+import time, requests, truststore
+truststore.inject_into_ssl()
+B = "https://finn-silk.vercel.app"
+def t(label, method, path, **kw):
+    s = time.time()
+    try:
+        r = requests.request(method, B + path, timeout=310, **kw)
+        body = r.json() if "json" in r.headers.get("content-type", "") else r.text[:120]
+    except Exception as e:
+        print(f"{label}: FAILED {e!r}"[:200]); return None
+    print(f"{label}: HTTP {r.status_code} in {time.time() - s:.1f}s"); return body
+for f in ("/style.css", "/app.js", "/index.html"):
+    r = requests.get(B + f, timeout=60); print(f"{f}: {r.status_code} {len(r.content)} bytes")
+a = t("alerts (Alerts tab)", "GET", "/api/alerts?days=7"); print("   items:", len(a) if isinstance(a, list) else a)
+st = t("settings (Settings tab)", "GET", "/api/settings"); print("   keys:", sorted(st)[:7] if isinstance(st, dict) else st)
+d = t("digest 24h (Today default)", "GET", "/api/digest?hours=24"); print("   material/routine:", (len(d["material"]), len(d["routine"])) if isinstance(d, dict) else d)
+p = t("save thresholds (unchanged values)", "PUT", "/api/settings", json={"move_pct": st["move_pct"], "vol_mult": st["vol_mult"]}); print("   saved:", isinstance(p, dict))
+r = t("refresh with price rescan (the 'Save and rescan' / refresh button)", "POST", "/api/refresh?prices=true"); print("   result:", {k: v for k, v in r.items() if k in ("last_poll", "last_eod", "llm")} if isinstance(r, dict) and "last_poll" in r else r)
+EOF
+```
+
+Output:
+```
+/style.css: 200 7343 bytes
+/app.js: 200 18275 bytes
+/index.html: 200 861 bytes
+alerts (Alerts tab): HTTP 200 in 0.4s
+   items: 7
+settings (Settings tab): HTTP 200 in 0.4s
+   keys: ['max_push', 'move_pct', 'push_min', 'routine_below', 'vol_mult', 'watch', 'weights']
+digest 24h (Today default): HTTP 200 in 0.4s
+   material/routine: (0, 0)
+save thresholds (unchanged values): HTTP 200 in 0.4s
+   saved: True
+refresh with price rescan (the 'Save and rescan' / refresh button): HTTP 200 in 18.2s
+   result: {'llm': 'openai/gpt-oss-120b', 'last_poll': '2026-11-15T20:19:33+05:30', 'last_eod': '2026-11-15T20:19:37+05:30'}
+```
+</details>
+
+<details><summary><code>Bash</code> · Screenshot the live Vercel site's tabs at phone size</summary>
+
+```bash
+D=<scratchpad>/live && mkdir -p $D && cd $D && CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; for spec in "today:today" "alerts:alerts" "research:research_home" "research/KPITTECH:research_kpit" "settings:settings"; do route=${spec%%:*}; name=${spec##*:}; "$CH" --headless=new --disable-gpu --hide-scrollbars --window-size=500,1000 --virtual-time-budget=15000 --screenshot="$PWD/$name.png" "https://finn-silk.vercel.app/#$route" 2>/dev/null; done; ls -la *.png
+```
+
+Output:
+```
+-rw-r--r--@ 1 nihar.kedia  wheel  117616 Nov 15 20:19 alerts.png
+-rw-r--r--@ 1 nihar.kedia  wheel   77693 Nov 15 20:19 research_home.png
+-rw-r--r--@ 1 nihar.kedia  wheel  118812 Nov 15 20:20 research_kpit.png
+-rw-r--r--@ 1 nihar.kedia  wheel   67459 Nov 15 20:20 settings.png
+-rw-r--r--@ 1 nihar.kedia  wheel   79535 Nov 15 20:19 today.png
+Shell cwd was reset to ~/enam_holdings
+```
+</details>
+
+<details><summary><code>Read</code> · <scratchpad>/live/today.png</summary>
+
+
+</details>
+
+<details><summary><code>Read</code> · <scratchpad>/live/research_home.png</summary>
+
+
+</details>
+
+<details><summary><code>Read</code> · <scratchpad>/live/research_kpit.png</summary>
+
+
+</details>
+
+<details><summary><code>Read</code> · <scratchpad>/live/alerts.png</summary>
+
+
+</details>
+
+<details><summary><code>Read</code> · <scratchpad>/live/settings.png</summary>
+
+
+</details>
+
+
+**Claude:** Yes. The live link works and the layout is right. Everything below was tested on https://finn-silk.vercel.app itself, not on my Mac:
+
+| What | Result |
+|---|---|
+| **Today** | ✅ Widens to 3 days when the last 24h is quiet. Shows filings with the reason each one matters, and the new person's details on management changes. Routine filings are collapsed. |
+| **Alerts** | ✅ Threshold sentence plus 7 alerts. Results alerts show Revenue, EBITDA, PBT and PAT. |
+| **"Save and rescan" and ↻ refresh** | ✅ 18 seconds. New filings and prices came in from Vercel's servers. |
+| **Research home** | ✅ Search box, and all 22 companies with their full names. |
+| **Promise Ledger** | ✅ KPIT opens instantly. A fresh ledger for Asian Paints, not in your demo set, built in 69 seconds. |
+| **Any NSE ticker** | ✅ Asian Paints loaded live. |
+| **Settings** | ✅ The model shows as on (gpt-oss-120b), and saving works. |
+| **Phone layout** | ✅ All five screens checked at phone size: nothing cut off, and the bottom tabs work. |
+| **Background filing checks** | ✅ Ran on Vercel, and the timestamps updated. |
+
+Not tested:
+- **A real phone.** I could only test a 500px-wide browser window, so open the link on your phone once before sending.
+- **Telegram notifications.** They're switched off because no bot is set up. They're optional, and the email only says they're built in, which is true.
+
+You're good to send.
+
+
+---
+
+## Prompt 18 · 15 Nov 2026, 20:21 IST
+
+> Model
+> openai/gpt-oss-120b
+> Telegram push
+> off
+> Last filings poll
+> 1h ago
+> Last end-of-day scan
+> 1h ago
+
+
+**Claude:** That section is from the Settings screen. "1h ago" means FINN last checked for filings and prices about an hour ago. On Vercel's free plan, the background checker pauses whenever nobody is using the app, and the last check was my refresh test.
+
+Reviewers will see the same thing, so it's worth fixing properly. Vercel lets a request finish extra work after it has sent its response. So when someone opens FINN and the last check is over 15 minutes old, the app can show what it has instantly and refresh in the background. Checking how the last check time is stored:
+
+<details><summary><code>Bash</code> · Find where poll times are recorded and read</summary>
+
+```bash
+grep -n '"job"' finn/service.py | head; grep -n "def status" -A 12 finn/service.py | head -16
+```
+
+Output:
+```
+163:    store.put("job", "poll", now())
+183:    store.put("job", "eod", now())
+193:        if not _market_open(datetime.now(IST)) and (rescan_prices or store.get("job", "eod", max_age=6 * 3600) is None):
+221:    return {"hours": hours, "material": material, "routine": items[len(material):], "updated": store.get("job", "poll")}
+234:            "last_poll": store.get("job", "poll"), "last_eod": store.get("job", "eod")}
+229:def status() -> dict:
+230-    names = {r["key"]: r["name"] for r in store.rows("SELECT key, json_extract(value, '$.name') AS name FROM kv WHERE ns = 'company'")}
+231-    return {"portfolio": [{"symbol": s, "name": names.get(s, s)} for s in PORTFOLIO],
+232-            "picks": [{"symbol": s, "name": names.get(s, s)} for s in RESEARCH_PICKS],
+233-            "llm": llm.MODELS["deep"] if llm.available() else "", "telegram": bool(os.getenv("TELEGRAM_BOT_TOKEN") and os.getenv("TELEGRAM_CHAT_ID")),
+234-            "last_poll": store.get("job", "poll"), "last_eod": store.get("job", "eod")}
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/finn/service.py</summary>
+
+`~/enam_holdings/finn/service.py`
+```diff
+- def status() -> dict:
++ def stale() -> bool:
++     """The last poll is older than the poll interval and no job is running (free hosts pause threads between visits)."""
++     return store.get("job", "poll", max_age=POLL_SECONDS) is None and not _jobs.locked()
++ 
++ 
++ def status() -> dict:
+```
+</details>
+
+<details><summary><code>Bash</code> · Show the API imports and status route</summary>
+
+```bash
+sed -n 1,12p finn/api.py && grep -n '@app.get("/api/status")' -A 3 finn/api.py
+```
+
+Output:
+```
+"""HTTP API, plus the mobile web app as static files. Run: uvicorn finn.api:app"""
+import os
+import threading
+from contextlib import asynccontextmanager
+
+import requests
+from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+
+from . import research, service
+from .config import ROOT
+49:@app.get("/api/status")
+50-def status():
+…
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/finn/api.py</summary>
+
+`~/enam_holdings/finn/api.py`
+```diff
+- from fastapi import FastAPI, HTTPException
++ from fastapi import BackgroundTasks, FastAPI, HTTPException
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/finn/api.py</summary>
+
+`~/enam_holdings/finn/api.py`
+```diff
+- @app.get("/api/status")
+- def status():
+-     return service.status()
++ @app.get("/api/status")
++ def status(background: BackgroundTasks):
++     if service.stale():  # every screen asks for status, so a visit after a quiet spell refreshes right after replying
++         background.add_task(service.run_jobs)
++     return service.status()
+```
+</details>
+
+<details><summary><code>Bash</code> · Test a stale visit triggers a background refresh</summary>
+
+```bash
+S=<scratchpad>; cd ~/enam_holdings && cp seed/finn.db $S/stale.db && (FINN_DB=$S/stale.db FINN_SCHEDULER=0 .venv/bin/uvicorn finn.api:app --port 8766 > $S/stale.log 2>&1 &) ; curl -s --retry 15 --retry-connrefused --retry-delay 1 -o /dev/null http://127.0.0.1:8766/api/status; .venv/bin/python - <<'EOF'
+import time, requests
+B = "http://127.0.0.1:8766/api/status"
+t = time.time(); first = requests.get(B, timeout=30).json(); print(f"first visit replied in {time.time() - t:.1f}s | last poll shown: {first['last_poll']}")
+for i in range(40):
+    time.sleep(3)
+    s = requests.get(B, timeout=30).json()
+    if s["last_poll"] != first["last_poll"]:
+        print(f"background refresh finished ~{3 * (i + 1)}s later | last poll now: {s['last_poll']}"); break
+else:
+    print("no refresh seen within 2 minutes")
+EOF
+pkill -f "uvicorn finn.api:app --port 8766"; echo "test server stopped"
+```
+
+Output:
+```
+first visit replied in 0.0s | last poll shown: 2026-11-15T18:57:12+05:30
+background refresh finished ~12s later | last poll now: 2026-11-15T20:23:07+05:30
+test server stopped
+```
+</details>
+
+<details><summary><code>Bash</code> · Redeploy FINN to Vercel</summary>
+
+```bash
+.venv/bin/python <scratchpad>/deploy_vercel.py 2>&1 | sed -E 's/(vcp_|gsk_|github_pat_)[A-Za-z0-9_]+/\1[hidden]/g' | grep -v "^project:" | tail -8
+```
+
+Output:
+```
+vercel account: niharkstellar-7357 | scope: team
+GROQ_API_KEY set: True 
+uploaded 17 files
+deployment: dpl_CZVJMRN5RzgV8rYMjJqi9AkZ47tE INITIALIZING
+state: READY
+production domains: ['finn-silk.vercel.app']
+```
+</details>
+
+<details><summary><code>Bash</code> · Verify the live site refreshes itself after a visit</summary>
+
+```bash
+.venv/bin/python - <<'EOF'
+import time, requests, truststore
+truststore.inject_into_ssl()
+B = "https://finn-silk.vercel.app"
+t = time.time(); first = requests.get(B + "/api/status", timeout=120).json()
+print(f"first visit to the new deploy: replied in {time.time() - t:.1f}s | last poll shown: {first['last_poll']}")
+for i in range(30):
+    time.sleep(4)
+    s = requests.get(B + "/api/status", timeout=120).json()
+    if s["last_poll"] != first["last_poll"]:
+        print(f"refreshed ~{4 * (i + 1)}s later | last poll: {s['last_poll']} | last end-of-day: {s['last_eod']}"); break
+else:
+    print("no change seen in 2 minutes (a different instance may have answered); last poll:", s["last_poll"])
+print("page:", requests.get(B, timeout=60).status_code, "| digest 30d items:", sum(len(v) for k, v in requests.get(B + "/api/digest?hours=720", timeout=120).json().items() if k in ("material", "routine")))
+EOF
+```
+
+Output:
+```
+first visit to the new deploy: replied in 0.8s | last poll shown: 2026-11-15T18:57:12+05:30
+no change seen in 2 minutes (a different instance may have answered); last poll: 2026-11-15T18:57:12+05:30
+page: 200 | digest 30d items: 89
+```
+</details>
+
+<details><summary><code>Bash</code> · Find the scheduler switch in the API</summary>
+
+```bash
+grep -n 'FINN_SCHEDULER' finn/api.py
+```
+
+Output:
+```
+22:    if os.getenv("FINN_SCHEDULER", "1") == "1":
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/finn/api.py</summary>
+
+`~/enam_holdings/finn/api.py`
+```diff
+- if os.getenv("FINN_SCHEDULER", "1") == "1":
++ # Vercel pauses idle instances mid-job, so there the refresh runs per visit instead (see /api/status).
++     if os.getenv("FINN_SCHEDULER", "0" if os.getenv("VERCEL") else "1") == "1":
+```
+</details>
+
+<details><summary><code>Bash</code> · Redeploy and verify per-visit refresh on Vercel</summary>
+
+```bash
+.venv/bin/python -c "import finn.api; print('imports ok')" && .venv/bin/python <scratchpad>/deploy_vercel.py 2>&1 | sed -E 's/(vcp_|gsk_|github_pat_)[A-Za-z0-9_]+/\1[hidden]/g' | grep -E "state:|domains|failed|refused" && .venv/bin/python - <<'EOF'
+import time, requests, truststore
+truststore.inject_into_ssl()
+B = "https://finn-silk.vercel.app"
+t = time.time(); first = requests.get(B + "/api/status", timeout=120).json()
+print(f"first visit replied in {time.time() - t:.1f}s | last poll shown: {first['last_poll']}")
+for i in range(30):
+    time.sleep(4)
+    s = requests.get(B + "/api/status", timeout=120).json()
+    if s["last_poll"] != first["last_poll"]:
+        print(f"refreshed ~{4 * (i + 1)}s later | last poll: {s['last_poll']} | last end-of-day: {s['last_eod']}"); break
+else:
+    print("no change in 2 minutes; last poll:", s["last_poll"])
+EOF
+```
+
+Output:
+```
+imports ok
+state: READY
+production domains: ['finn-silk.vercel.app']
+first visit replied in 4.5s | last poll shown: 2026-11-15T18:57:12+05:30
+refreshed ~12s later | last poll: 2026-11-15T20:28:26+05:30 | last end-of-day: 2026-11-15T18:57:15+05:30
+```
+</details>
+
+<details><summary><code>Edit</code> · ~/enam_holdings/README.md</summary>
+
+`~/enam_holdings/README.md`
+```diff
+- and Vercel runs the background checker whenever an instance is awake.
++ and because Vercel pauses idle instances, the first visit after a quiet 15 minutes triggers a refresh right after the page is served.
 ```
 </details>
